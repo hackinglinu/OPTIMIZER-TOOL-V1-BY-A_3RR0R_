@@ -1,0 +1,166 @@
+@echo off
+chcp 65001 >nul
+color 0A
+
+:: Comprobamos si el script está ejecutándose como administrador
+openfiles >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ESTE PROGRAMA NECESITA SER EJECUTADO COMO ADMINISTRADOR.
+    pause
+    exit
+)
+
+:menu
+cls
+echo      db                       `7MM"""Mq.  `7MM"""Mq.             `7MM"""Mq.          
+echo     ;MM:                        MM   `MM.   MM   `MM.              MM   `MM.         
+echo    ,V^MM.             pd""b.    MM   ,M9    MM   ,M9   ,pP""Yq.    MM   ,M9          
+echo   ,M  `MM            (O)  `8b   MMmmdM9     MMmmdM9   6W'    `Wb   MMmmdM9           
+echo   AbmmmqMA                ,89   MM  YM.     MM  YM.   8M      M8   MM  YM.           
+echo  A'     VML             ""Yb.   MM   `Mb.   MM   `Mb. YA.    ,A9   MM   `Mb.         
+echo .AMA.   .AMMA.              88 .JMML. .JMM..JMML. .JMM. `Ybmmd9'  .JMML. .JMM.        
+echo                       (O)  .M'                                                         
+echo               mmmmmmm  bmmmd'                                                 mmmmmmm 
+
+echo.
+echo ESTA HERRAMIENTA FUE CREADA POR: TIKTOK @A_3RR0R QUEDA PROHIBIDA LA REVENTA DE ESTE PROGRAMA
+echo.
+echo GRACIAS POR USAR A_3RR0R OPTIMIZER TOOL
+echo.
+
+echo [1] ELIMINAR ARCHIVOS TEMPORALES
+echo [2] REPARAR ARCHIVOS DAÑADOS
+echo [3] PROGRAMAS AL INICIAR
+echo [4] OPTIMIZAR INTERNET
+echo [5] DESINSTALAR PROGRAMAS INNECESARIOS
+echo [6] OPTIMIZAR MEMORIA RAM
+echo [7] SALIR
+echo.
+set /p option=ELIGE UNA OPCIÓN: 
+
+if "%option%"=="1" goto eliminar_archivos_temporales
+if "%option%"=="2" goto reparar_archivos_danados
+if "%option%"=="3" goto programas_al_iniciar
+if "%option%"=="4" goto optimizar_internet
+if "%option%"=="5" goto desinstalar_programas
+if "%option%"=="6" goto optimizar_memoria_ram
+if "%option%"=="7" exit
+
+goto menu
+
+::==========================================
+:: [1] ELIMINAR ARCHIVOS TEMPORALES
+::==========================================
+:eliminar_archivos_temporales
+cls
+echo ELIMINANDO ARCHIVOS TEMPORALES...
+set "temp_path=C:\Users\%USERNAME%\AppData\Local\Temp"
+
+:: Contar archivos antes de borrar
+set /a total_files=0
+for %%F in (%temp_path%\*) do set /a total_files+=1
+
+:: Barra de progreso simulada
+set /a progreso=0
+for %%F in (%temp_path%\*) do (
+    del /f /q "%%F" >nul 2>&1
+    set /a progreso+=1
+    set /a porcentaje=(progreso*100)/total_files
+    echo %porcentaje%% COMPLETADO...
+)
+
+echo PROCESO COMPLETADO CON ÉXITO.
+pause >nul
+goto menu
+
+::==========================================
+:: [2] REPARAR ARCHIVOS DAÑADOS
+::==========================================
+:reparar_archivos_danados
+cls
+echo REPARANDO ARCHIVOS DEL SISTEMA...
+sfc /scannow
+echo POR FAVOR REINICIE SU PC PARA APLICAR LOS EFECTOS.
+pause >nul
+goto menu
+
+::==========================================
+:: [3] PROGRAMAS AL INICIAR
+::==========================================
+:programas_al_iniciar
+cls
+echo ABRIENDO ADMINISTRADOR DE TAREAS (INICIO)...
+start shell:Startup
+pause >nul
+goto menu
+
+::==========================================
+:: [4] OPTIMIZAR INTERNET
+::==========================================
+:optimizar_internet
+cls
+echo OPTIMIZANDO INTERNET...
+ipconfig /flushdns
+echo PROCESO COMPLETADO.
+pause >nul
+goto menu
+
+::==========================================
+:: [5] DESINSTALAR PROGRAMAS INNECESARIOS
+::==========================================
+:desinstalar_programas
+cls
+echo [1] DESACTIVAR CORTANA
+echo [2] DESINSTALAR MICROSOFT EDGE
+echo [3] VOLVER AL MENÚ
+echo.
+set /p sub_option=ELIGE UNA OPCIÓN: 
+
+if "%sub_option%"=="1" goto desactivar_cortana
+if "%sub_option%"=="2" goto desinstalar_edge
+if "%sub_option%"=="3" goto menu
+
+goto desinstalar_programas
+
+:: Desactivar Cortana
+:desactivar_cortana
+cls
+echo DESACTIVANDO CORTANA...
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v AllowCortana /t REG_DWORD /d 0 /f
+echo CORTANA HA SIDO DESACTIVADO.
+pause >nul
+goto desinstalar_programas
+
+:: Desinstalar Microsoft Edge
+:desinstalar_edge
+cls
+echo DESINSTALANDO MICROSOFT EDGE...
+taskkill /F /IM msedge.exe >nul 2>&1
+cd %ProgramFiles(x86)%\Microsoft\Edge\Application\*.*\Installer
+setup.exe --uninstall --system-level --verbose-logging --force-uninstall
+echo MICROSOFT EDGE HA SIDO DESINSTALADO.
+pause >nul
+goto desinstalar_programas
+
+::==========================================
+:: [6] OPTIMIZAR MEMORIA RAM
+::==========================================
+:optimizar_memoria_ram
+cls
+echo DESCARGANDO MEMREDUCT PARA OPTIMIZAR LA MEMORIA RAM...
+set "desktop=%USERPROFILE%\Desktop"
+set "download_path=%desktop%\memreduct_setup.exe"
+
+:: Descargar usando curl
+curl -L -o "%download_path%" "https://github.com/henrypp/memreduct/releases/latest/download/memreduct-setup.exe"
+
+if exist "%download_path%" (
+    echo MEMREDUCT HA SIDO DESCARGADO CORRECTAMENTE EN EL ESCRITORIO.
+    echo ABRIENDO INSTALADOR...
+    start "" "%download_path%"
+) else (
+    echo ERROR: NO SE PUDO DESCARGAR MEMREDUCT.
+)
+
+pause >nul
+goto menu
